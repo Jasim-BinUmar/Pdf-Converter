@@ -1,0 +1,186 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Editor files
+.vscode/
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.vbp
+*.ncb
+*.opt
+*.plg
+*.user
+*.scc
+*.vssscc
+
+# Testing
+/coverage/
+/tests/
+
+# IDE - specific files
+.idea/
+*.iml
+
+# Logs
+logs/
+*.log
+npm-debug.log
+
+# Temporary files
+*.pid
+*.lock
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.vbp
+*.ncb
+*.opt
+*.plg
+*.user
+*.scc
+*.vssscc
+
+# Build artifacts
+build/
+dist/
+
+# Docker
+Dockerfile*
+docker-compose.yml
+docker-compose.override.yml
+.dockerignore
+
+# Editor files
+.vscode/
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.vbp
+*.ncb
+*.opt
+*.plg
+*.user
+*.scc
+*.vssscc
+
+# IDE - specific files
+.idea/
+*.iml
+
+# Logs
+logs/
+*.log
+npm-debug.log
+
+# Temporary files
+*.pid
+*.lock
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.vbp
+*.ncb
+*.opt
+*.plg
+*.user
+*.scc
+*.vssscc
+
+# IDE - specific files
+.idea/
+*.iml
+
+# Logs
+logs/
+*.log
+npm-debug.log
+
+# Temporary files
+*.pid
+*.lock
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.suo
+*.user
+*.sln
+*.tmp
+*.bak
+*.vbp
+*.ncb
+*.opt
+*.plg
+*.user
+*.scc
+*.vssscc
+
+# IDE - specific files
+.idea/
+*.iml
+
+# Logs
+logs/
+*.log
+npm-debug.log
+
+# Temporary files
+*.pid
+*.lock
+
+# OS generated files
+.DS_Store
+Thumbs.db
