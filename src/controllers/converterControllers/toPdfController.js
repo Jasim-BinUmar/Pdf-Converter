@@ -1,4 +1,5 @@
 const imagesToPdf = require('images-to-pdf');
+const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
@@ -241,10 +242,51 @@ const excelToPdf = async (req, res) => {
   }
 };
 
+// API endpoint for PDF to PDF/A conversion
+
+const pdfToPdfA = (req, res) => {
+  try {
+    // Ensure a file was uploaded
+    if (!req.file) {
+      return res.status(400).send({ message: 'Please upload a PDF file.' });
+    }
+
+    const inputPdf = req.file.path;
+    const outputPdf = path.join(__dirname, `../../uploads/${Date.now()}_pdfa_output.pdf`);
+
+    const command = `gs -dPDFA=1 -dBATCH -dNOPAUSE -dNOOUTERSAVE -sProcessColorModel=DeviceRGB -sDEVICE=pdfwrite -sPDFACompatibilityPolicy=1 -sOutputFile="${outputPdf}" "${inputPdf}"`;
+
+    console.log('Executing Ghostscript command for PDF/A conversion...');
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`Error converting to PDF/A: ${stderr}`);
+        return res.status(500).send({ message: 'Error converting to PDF/A', error: stderr });
+      }
+
+      console.log(`PDF/A file saved as ${outputPdf}`);
+
+      // Send the converted PDF/A file as a download
+      res.download(outputPdf, 'converted_pdfa.pdf', async (err) => {
+        if (err) {
+          console.error('Error sending the PDF/A file:', err);
+        }
+
+        // Clean up files
+        fs.unlink(inputPdf, console.error);
+        fs.unlink(outputPdf, console.error);
+      });
+    });
+  } catch (error) {
+    console.error('Unexpected error:', error.message);
+    res.status(500).send({ message: 'Unexpected server error', error: error.message });
+  }
+};
+
 
 module.exports = {
   imageToPdf,
   htmlToPdf: htmlToPdfEndpoint,
   docxToPdf,
   excelToPdf,
+  pdfToPdfA,
 };
