@@ -1,3 +1,4 @@
+const pdf2excel = require("pdf-to-excel")
 const path = require("path");
 const archiver = require("archiver");
 const { v4: uuidv4 } = require("uuid");
@@ -67,6 +68,53 @@ const pdfToImage = async (req, res) => {
   }
 };
 
+// Endpoint to convert PDF to Excel
+const pdfToExcel = async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ message: "Please upload a PDF file." })
+    }
+  
+    const inputPath = req.file.path
+    const outputPath = path.join(__dirname, "../../uploads", `${Date.now()}_output.xlsx`)
+  
+    try {
+      const options = {
+        onProcess: (e) => console.log(`Converting page ${e.numPage} of ${e.numPages}`),
+        start: 1,
+        end: undefined,
+      }
+  
+      console.log("Starting PDF to Excel conversion...")
+      console.log("Input file:", inputPath)
+      console.log("Output file:", outputPath)
+  
+      await pdf2excel.genXlsx(inputPath, outputPath, options)
+  
+      console.log("Conversion completed successfully!")
+  
+      res.download(outputPath, "converted.xlsx", async (err) => {
+        if (err) {
+          console.error("Download error:", err)
+          if (!res.headersSent) {
+            res.status(500).json({ message: "Error downloading the Excel file" })
+          }
+        }
+  
+        // Clean up
+        // await fsPromises.unlink(inputPath).catch(console.error)
+        // await fsPromises.unlink(outputPath).catch(console.error)
+      })
+    } catch (error) {
+      console.error("Error during PDF to Excel conversion:", error)
+      res.status(500).json({ message: "Error converting PDF to Excel", error: error.message })
+  
+      // Clean up in case of error
+      //await fsPromises.unlink(inputPath).catch(console.error)
+    }
+  }
+  
+
 module.exports = {
   pdfToImage,
+  pdfToExcel,
 };
