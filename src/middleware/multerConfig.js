@@ -1,6 +1,6 @@
+
 const multer = require('multer');
 const path = require('path');
-
 
 const storage = multer.diskStorage({
   destination: '../uploads',
@@ -10,12 +10,22 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  const fileTypes = /jpeg|jpg|png/;
+  const fileTypes = /jpeg|jpg|png|docx|doc/;
   const extname = fileTypes.test(path.extname(file.originalname).toLowerCase());
-  if (extname) return cb(null, true);
-  cb(new Error('Only images are allowed (jpeg, jpg, png)'));
+  const mimetype = fileTypes.test(file.mimetype);
+
+  if (extname && mimetype) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Error: File upload only supports the following filetypes - ' + fileTypes));
+  }
 };
 
-const upload = multer({ storage, fileFilter });
+const upload = multer({ 
+  storage: storage,
+  fileFilter: fileFilter
+});
 
 module.exports = upload;
+
+
