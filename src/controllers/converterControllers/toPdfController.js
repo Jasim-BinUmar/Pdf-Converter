@@ -3,6 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const puppeteer = require('puppeteer');
 const mammoth = require('mammoth');
+const XlsxPopulate = require('xlsx-populate');
 const fsPromises = require('fs').promises;
 
 // Function to convert (png, jpg, jpeg) to pdf
@@ -128,6 +129,7 @@ const convertDocxToHtml = async (docxPath) => {
   }
 };
 
+// API endpoint for DocX to PDF conversion
 const docxToPdf = async (req, res) => {
   try {
     console.log('Received request for DOCX to PDF conversion');
@@ -162,8 +164,87 @@ const docxToPdf = async (req, res) => {
   }
 };
 
+// API endpoint for xls to PDF conversion
+
+const excelToPdf = async (req, res) => {
+  try {
+    // Ensure a file was uploaded
+    if (!req.file) {
+      return res.status(400).send({ message: 'Please upload an Excel file.' });
+    }
+
+    const inputPath = req.file.path;
+    const outputPath = path.join(__dirname, `../../uploads/${Date.now()}_xlsToPdf.pdf`);
+
+    console.log('Starting Excel to PDF conversion...');
+    console.log('Input Excel Path:', inputPath);
+
+    // Load the workbook
+    const workbook = await XlsxPopulate.fromFileAsync(inputPath);
+    const sheet = workbook.sheet(0);
+    const rows = sheet.usedRange().value();
+    const maxColumnsPerPage = 4;
+
+    // Split rows into groups of 4 columns
+    const columnChunks = [];
+    const totalColumns = Math.max(...rows.map(row => row.length));
+
+    for (let start = 0; start < totalColumns; start += maxColumnsPerPage) {
+      const chunk = rows.map(row => row.slice(start, start + maxColumnsPerPage));
+      columnChunks.push(chunk);
+    }
+
+    // Generate HTML for all chunks
+    let html = '';
+    columnChunks.forEach((chunk, index) => {
+      html += `<table style="border-collapse: collapse; width: 100%; margin-bottom: 20px;">`;
+      chunk.forEach(row => {
+        html += '<tr>';
+        row.forEach(cell => {
+          html += `<td style="border: 1px solid black; padding: 5px; text-align: left;">${cell || ''}</td>`;
+        });
+        html += '</tr>';
+      });
+      html += '</table>';
+      if (index < columnChunks.length - 1) {
+        html += '<div style="page-break-before: always;"></div>';
+      }
+    });
+
+    // Launch a headless browser
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    // Set the HTML content
+    await page.setContent(html, { waitUntil: 'networkidle0' });
+
+    // Generate PDF
+    await page.pdf({ path: outputPath, format: 'A4' });
+
+    await browser.close();
+
+    console.log('Conversion completed successfully! PDF saved at:', outputPath);
+
+    // Send the PDF as a download
+    res.download(outputPath, 'converted.pdf', async (err) => {
+      if (err) {
+        console.error('Error sending the PDF file:', err);
+      }
+
+      // Clean up files
+      fs.unlink(inputPath, console.error);
+      fs.unlink(outputPath, console.error);
+    });
+  } catch (error) {
+    console.error('Error during Excel to PDF conversion:', error.message);
+    res.status(500).send({ message: 'Error during conversion', error: error.message });
+  }
+};
+
+
 module.exports = {
   imageToPdf,
   htmlToPdf: htmlToPdfEndpoint,
   docxToPdf,
+  excelToPdf,
 };

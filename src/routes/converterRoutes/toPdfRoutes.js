@@ -1,6 +1,6 @@
 const express = require('express');
 const upload = require('../../middleware/multerConfig');
-const { imageToPdf, htmlToPdf, docxToPdf } = require('../../controllers/converterControllers/toPdfController');
+const { imageToPdf, htmlToPdf, docxToPdf, excelToPdf } = require('../../controllers/converterControllers/toPdfController');
 const router = express.Router();
 // Route to convert image to PDF
 router.post('/image-pdf', upload.array('images', 5), imageToPdf);
@@ -10,4 +10,8 @@ router.post('/html-pdf' , htmlToPdf);
 
 // Route to convert doc/docx to PDF
 router.post('/docx-pdf', upload.single('docxFile'), docxToPdf);
+
+// Route to convert xls to PDF
+router.post('/excel-pdf', upload.single('excelFile'), excelToPdf);
+
 module.exports = router;
