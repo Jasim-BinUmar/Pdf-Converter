@@ -1,5 +1,6 @@
 const pdf2excel = require("pdf-to-excel")
 const path = require("path");
+const mammoth = require("mammoth")
 const archiver = require("archiver");
 const { v4: uuidv4 } = require("uuid");
 const fs = require("fs");
@@ -113,8 +114,55 @@ const pdfToExcel = async (req, res) => {
     }
   }
   
+// Function to convert Word to HTML
+const wordToHtml = async (req, res) => {
+    if (!req.file) {
+      return res.status(400).json({ message: "Please upload a Word document." })
+    }
+  
+    const inputPath = req.file.path
+    const outputPath = path.join(__dirname, "../../uploads", `${Date.now()}_output.html`)
+  
+    try {
+      console.log("Starting Word to HTML conversion...")
+      console.log("Input file:", inputPath)
+      console.log("Output file:", outputPath)
+  
+      const result = await mammoth.convertToHtml({ path: inputPath })
+      const html = result.value
+  
+      await fsPromises.writeFile(outputPath, html)
+  
+      console.log("Conversion completed successfully!")
+  
+      res.download(outputPath, "converted.html", async (err) => {
+        if (err) {
+          console.error("Download error:", err)
+          if (!res.headersSent) {
+            res.status(500).json({ message: "Error downloading the HTML file" })
+          }
+        }
+  
+        // Clean up
+        // await fsPromises.unlink(inputPath).catch(console.error)
+        // await fsPromises.unlink(outputPath).catch(console.error)
+      })
+  
+      if (result.messages.length > 0) {
+        console.log("Conversion messages:", result.messages)
+      }
+    } catch (error) {
+      console.error("Error during Word to HTML conversion:", error)
+      res.status(500).json({ message: "Error converting Word to HTML", error: error.message })
+  
+      // Clean up in case of error
+      //await fsPromises.unlink(inputPath).catch(console.error)
+    }
+  }
+
 
 module.exports = {
   pdfToImage,
   pdfToExcel,
+  wordToHtml,
 };
