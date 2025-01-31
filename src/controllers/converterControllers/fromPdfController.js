@@ -11,7 +11,7 @@ const pdfToImage = async (req, res) => {
     return res.status(400).json({ message: "Please upload a PDF file." });
   }
 
-  const workDir = path.join(__dirname, "../../uploads", uuidv4());
+  const workDir = path.join(process.cwd(), "../../uploads", uuidv4());
   const outputDir = path.join(workDir, "output");
   console.log("Here at start ");
   console.log("Working dir is: " + workDir);
