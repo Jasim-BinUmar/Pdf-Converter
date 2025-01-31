@@ -9,7 +9,7 @@ const mergePdf = async (req, res) => {
   }
 
   const merger = new PDFMerger()
-  const outputPath = path.join(__dirname, "../../uploads", `${Date.now()}_merged.pdf`)
+  const outputPath = path.join(__dirname, "../../../uploads", `${Date.now()}_merged.pdf`)
 
   try {
     // Parse merge instructions from the request body

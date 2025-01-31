@@ -11,9 +11,11 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@vtfk/pdf-splitter": "^1.1.2",
     "archiver": "^7.0.1",
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "images-to-pdf": "^1.0.3",
     "mammoth": "^1.9.0",
