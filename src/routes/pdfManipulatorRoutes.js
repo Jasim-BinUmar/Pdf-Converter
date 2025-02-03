@@ -34,7 +34,7 @@ router.post('/rotate-pdf', upload.single('pdfFile'), async (req, res) => {
 // Route to encrypt pdf
 router.post('/encrypt-pdf', upload.single('pdfFile'), async (req,res) =>{
   try {
-    const { encryptPdf } = await import("../controllers/pdfmanipulationControllers/encryptPdf.mjs")
+    const { encryptPdf } = await import("../controllers/pdfmanipulationControllers/encryptPdfController.mjs")
     await encryptPdf(req, res)
   } catch (error) {
     console.error("Error importing or executing encryptPdfFile:", error)
@@ -43,13 +43,23 @@ router.post('/encrypt-pdf', upload.single('pdfFile'), async (req,res) =>{
   }
 })
 
+//Route to decrypt PDF
+router.post('/decrypt-pdf', upload.single('pdfFile'), async (req, res) => {
+  try {
+    const { decryptPdf } = await import ('../controllers/pdfmanipulationControllers/decryptPdfController.mjs');
+    await decryptPdf(req, res);
+  } catch (error) {
+    console.error('Error importing or executing decryptPdf:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
 // Route to watermark PDF
 router.post('/watermark-pdf', 
   upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'watermarkFile', maxCount: 1 }]), 
   async (req, res) => {
     try {
-      const { watermarkPdf } = await import("../controllers/pdfmanipulationControllers/watermarkPdf.mjs");
+      const { watermarkPdf } = await import("../controllers/pdfmanipulationControllers/watermarkPdfController.mjs");
       await watermarkPdf(req, res);
     } catch (error) {
       console.error("Error importing or executing addWatermark:", error);
@@ -58,16 +68,20 @@ router.post('/watermark-pdf',
   }
 );
 
-//Route to decrypt PDF
-router.post('/decrypt-pdf', upload.single('pdfFile'), async (req, res) => {
+// Route to Stamp PDF
+router.post('/stamp-pdf', 
+  upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'stampFile', maxCount: 1 }]),
+  async (req, res) => {
   try {
-    const { decryptPdf } = await import ('../controllers/pdfmanipulationControllers/decryptPdf.mjs');
-    await decryptPdf(req, res);
+    const { stampPdf } = await import ('../controllers/pdfmanipulationControllers/stampPdfController.mjs');
+    await stampPdf(req, res);
   } catch (error) {
-    console.error('Error importing or executing decryptPdf:', error);
+    console.error('Error importing or executing stampPdf:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+
 
 
 
