@@ -43,28 +43,32 @@ router.post('/encrypt-pdf', upload.single('pdfFile'), async (req,res) =>{
   }
 })
 
+
 // Route to watermark PDF
-router.post(
-  "/watermark-pdf",
-  upload.fields([
-    { name: "inputPdf", maxCount: 1 },
-    { name: "watermarkPdf", maxCount: 1 },
-  ]),
+router.post('/watermark-pdf', 
+  upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'watermarkFile', maxCount: 1 }]), 
   async (req, res) => {
     try {
-      const { watermarkPdf } = await import(
-        "../controllers/pdfmanipulationControllers/waterMarkPdf.mjs"
-      ).catch((err) => {
-        console.error("Error importing watermarkPdf function:", err)
-        throw err
-      })
-      await watermarkPdf(req, res)
+      const { watermarkPdf } = await import("../controllers/pdfmanipulationControllers/watermarkPdf.mjs");
+      await watermarkPdf(req, res);
     } catch (error) {
-      console.error("Error in watermark-pdf route:", error)
-      res.status(500).json({ error: "Internal server error", details: error.message })
+      console.error("Error importing or executing addWatermark:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
-  },
-)
+  }
+);
+
+//Route to decrypt PDF
+router.post('/decrypt-pdf', upload.single('pdfFile'), async (req, res) => {
+  try {
+    const { decryptPdf } = await import ('../controllers/pdfmanipulationControllers/decryptPdf.mjs');
+    await decryptPdf(req, res);
+  } catch (error) {
+    console.error('Error importing or executing decryptPdf:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 
 
 module.exports = router;
