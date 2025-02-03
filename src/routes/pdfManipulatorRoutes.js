@@ -1,9 +1,6 @@
 const express = require('express');
 const upload = require('../middleware/multerConfig');
 const { mergePdf } = require('../controllers/pdfmanipulationControllers/mergePdfController');
-//const encryptPdf = require ('../controllers/pdfmanipulationControllers/encryptPdfController.js');
-// import { rotatePdf } from '../../controllers/pdfmanipulationControllers/rotatePdfController';
-//const rotatePdf = require ('../controllers/pdfmanipulationControllers/rotatePdfController')
 const router = express.Router();
 
 // Merge Pdfs route

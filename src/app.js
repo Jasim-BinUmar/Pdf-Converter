@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const toPdfRoutes = require('./routes/converterRoutes/toPdfRoutes');
 const fromPdfRoutes = require('./routes/converterRoutes/fromPdfRoutes')
 const pdfManipulatorRoutes = require('./routes/pdfManipulatorRoutes')
-//const esModuleRoutes = require('./routes/pdfmanipulationRoutes/esModuleRoutes')
+const gifRoutes = require ('./routes/gifRoutes')
 const app = express();
 
 app.use(cors());
@@ -19,6 +19,8 @@ app.use('/api/converter/fromPdf', fromPdfRoutes);
 // Pdf Manipulation Routes
 app.use('/api/manipulation/', pdfManipulatorRoutes);
 
-//app.use('/api/esManipulation/', esModuleRoutes);
+// Gif routes
+app.use('/api/gif/', gifRoutes);
+
 
 module.exports = app;
