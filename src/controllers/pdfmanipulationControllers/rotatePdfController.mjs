@@ -25,6 +25,7 @@ export async function rotatePdf(req, res) {
     }
 
     const inputFile = pdfFile.path;
+    console.log(inputFile);
     const outputFile = path.join(uploadDir, 'rotatedPdf.pdf');
 
     const rotateArgs = rotations.map(r => `${r.page}${r.angle}`).join(' ');
