@@ -78,7 +78,31 @@ router.post('/stamp-pdf',
   }
 });
 
+// Route to Remove pages from PDF
+router.post('/remove-pages', upload.single('pdfFile'), async(req, res)=>
+{
+  try {
+    const {removePages} = await import('../controllers/pdfmanipulationControllers/removePagesController.mjs');
+    await removePages(req,res);
+    
+  } catch (error) {
+    console.error('Error importing or executing removePages:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+})
 
+// Route to extract pages
+router.post('/extract-pages', upload.single('pdfFile'), async(req, res)=>
+  {
+    try {
+      const {extractPages} = await import('../controllers/pdfmanipulationControllers/extractPagesController.mjs');
+      await extractPages(req,res);
+      
+    } catch (error) {
+      console.error('Error importing or executing removePages:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  })
 
 
 
