@@ -68,7 +68,7 @@ async function createGif(req, res) {
   uploadDir = path.join(__dirname, '../../../uploads')
   const inputPath = file.path;
   const outputPath = path.join(uploadDir, 'outputGif.gif');
-  console.log(outputPath);
+
   const fileExtension = path.extname(inputPath).toLowerCase();
   const videoExtensions = ['.mp4', '.avi', '.mov', '.webm'];
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp'];
